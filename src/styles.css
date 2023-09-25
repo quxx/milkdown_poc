@@ -1,0 +1,10 @@
+.App {
+  font-family: sans-serif;
+  text-align: center;
+}
+.milkdown .editor {
+  padding: 0 1rem;
+  border: 1px solid #cccccc;
+  border-radius: 5px;
+  text-align: left;
+}
