@@ -1,3 +1,7 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
 .App {
   font-family: sans-serif;
   text-align: center;
@@ -7,4 +11,13 @@
   border: 1px solid #cccccc;
   border-radius: 5px;
   text-align: left;
+}
+
+.w-65 {
+  width: 65ch;
+}
+
+.icon {
+  border: 1px solid rgb(229 231 235 / var(--tw-text-opacity));
+  margin-right: 1px;
 }

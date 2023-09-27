@@ -1,5 +1,6 @@
 import { useCallback, useState } from "react";
 import {
+  CmdKey,
   Editor,
   defaultValueCtx,
   editorViewOptionsCtx,
@@ -13,6 +14,7 @@ import {
   placeholderCtx,
 } from "milkdown-plugin-placeholder";
 import { nord } from "@milkdown/theme-nord";
+import "@milkdown/theme-nord/style.css";
 import {
   buildCommands,
   buildInputrules,
@@ -21,12 +23,23 @@ import {
   buildShema,
 } from "./composed";
 import { MilkdownPlugin } from "@milkdown/ctx";
+import { callCommand } from "@milkdown/utils";
+import {
+  toggleEmphasisCommand,
+  toggleStrongCommand,
+} from "@milkdown/preset-commonmark";
+import { Button } from "./component/Button";
 
 interface MilkdownInternalProps {
   defaultValue: string;
   placeholder?: string;
   onChange: (newValue: string) => void;
   config: PepperMilkdownFunc[];
+  markdownView?: boolean;
+}
+
+interface MilkdownProps extends MilkdownInternalProps {
+  setEditor: (edtior: Editor) => void;
 }
 
 export function MarkdownEditor({
@@ -35,6 +48,7 @@ export function MarkdownEditor({
   placeholder,
   onChange,
   config,
+  markdownView,
 }: MilkdownInternalProps & {
   name: string;
 }) {
@@ -47,15 +61,51 @@ export function MarkdownEditor({
     [setValue, onChange]
   );
 
+  const [editor, setEditor] = useState<Editor>(); // the lifted state
+
+  const sendDataToParent = (e: Editor) => {
+    setEditor(e);
+  };
+
+  function call<T>(command: CmdKey<T>, payload?: T) {
+    return editor?.action(callCommand(command, payload));
+  }
+
+  function handleCheck(val: PepperMilkdownFunc): boolean {
+    return config.some((item) => val === item);
+  }
+
   return (
     <MilkdownProvider>
+      <div className="prose mx-auto flex">
+        {handleCheck(PepperMilkdownFunc.Bold) && (
+          <Button
+            icon="format_bold"
+            onClick={() => call(toggleStrongCommand.key)}
+          />
+        )}
+        {handleCheck(PepperMilkdownFunc.Italic) && (
+          <Button
+            icon="format_italic"
+            onClick={() => call(toggleEmphasisCommand.key)}
+          />
+        )}
+      </div>
       <input type="hidden" name={name} value={value} />
       <MilkdownInternal
         defaultValue={defaultValue}
         onChange={handleChange}
         placeholder={placeholder}
         config={config}
+        setEditor={sendDataToParent}
       />
+      {markdownView && (
+        <textarea
+          className="prose w-65 editor"
+          value={value}
+          onChange={(e) => setValue(e.target.value)}
+        />
+      )}
     </MilkdownProvider>
   );
 }
@@ -65,8 +115,9 @@ function MilkdownInternal({
   placeholder,
   onChange,
   config,
-}: MilkdownInternalProps) {
-  useEditor(
+  setEditor,
+}: MilkdownProps) {
+  const d = useEditor(
     (root) =>
       Editor.make()
         .config((ctx) => {
@@ -78,13 +129,13 @@ function MilkdownInternal({
           ctx.update(editorViewOptionsCtx, (prev) => ({
             ...prev,
             attributes: {
-              class: "h-full-",
+              class: "h-full",
             },
             editable: () => true,
           }));
           ctx.update(rootAttrsCtx, (prev) => ({
             ...prev,
-            class: "milkdown-editor",
+            class: "milkdown-editor prose m-auto",
           }));
 
           const listener = ctx.get(listenerCtx);
@@ -101,6 +152,7 @@ function MilkdownInternal({
         .use(buildPreset(config)),
     [onChange, placeholder]
   );
+  setEditor(d.get() as Editor);
 
   return <Milkdown />;
 }

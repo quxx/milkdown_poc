@@ -20,6 +20,7 @@ export default function App() {
         }}
         name={""}
         config={[PepperMilkdownFunc.Bold, PepperMilkdownFunc.Italic]}
+        markdownView={true}
       />
       <br />
       <MarkdownEditor
