@@ -1,4 +1,4 @@
-import { useCallback, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import {
   CmdKey,
   Editor,
@@ -23,12 +23,7 @@ import {
   buildShema,
 } from "./composed";
 import { MilkdownPlugin } from "@milkdown/ctx";
-import { callCommand } from "@milkdown/utils";
-import {
-  toggleEmphasisCommand,
-  toggleStrongCommand,
-} from "@milkdown/preset-commonmark";
-import { Button } from "./component/Button";
+import { Toolbar } from "./component/Toolbar";
 
 interface MilkdownInternalProps {
   defaultValue: string;
@@ -61,36 +56,15 @@ export function MarkdownEditor({
     [setValue, onChange]
   );
 
-  const [editor, setEditor] = useState<Editor>(); // the lifted state
+  const [editor, setEditor] = useState<Editor>();
 
   const sendDataToParent = (e: Editor) => {
     setEditor(e);
   };
 
-  function call<T>(command: CmdKey<T>, payload?: T) {
-    return editor?.action(callCommand(command, payload));
-  }
-
-  function handleCheck(val: PepperMilkdownFunc): boolean {
-    return config.some((item) => val === item);
-  }
-
   return (
     <MilkdownProvider>
-      <div className="prose mx-auto flex">
-        {handleCheck(PepperMilkdownFunc.Bold) && (
-          <Button
-            icon="format_bold"
-            onClick={() => call(toggleStrongCommand.key)}
-          />
-        )}
-        {handleCheck(PepperMilkdownFunc.Italic) && (
-          <Button
-            icon="format_italic"
-            onClick={() => call(toggleEmphasisCommand.key)}
-          />
-        )}
-      </div>
+      <Toolbar editor={editor as Editor} config={config}></Toolbar>
       <input type="hidden" name={name} value={value} />
       <MilkdownInternal
         defaultValue={defaultValue}
@@ -152,7 +126,9 @@ function MilkdownInternal({
         .use(buildPreset(config)),
     [onChange, placeholder]
   );
-  setEditor(d.get() as Editor);
+  useEffect(() => {
+    setEditor(d.get() as Editor);
+  });
 
   return <Milkdown />;
 }
