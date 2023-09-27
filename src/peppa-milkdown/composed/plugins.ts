@@ -1,6 +1,6 @@
 /* Copyright 2021, Milkdown by Mirone. */
 
-import type { MilkdownPlugin } from '@milkdown/ctx'
+import type { MilkdownPlugin } from "@milkdown/ctx";
 import {
   inlineNodesCursorPlugin,
   inlineSyncConfig,
@@ -8,9 +8,11 @@ import {
   remarkAddOrderInListPlugin,
   remarkHtmlTransformer,
   remarkInlineLinkPlugin,
-  remarkLineBreak, remarkMarker,
+  remarkLineBreak,
+  remarkMarker,
   syncListOrderPlugin,
-} from '@milkdown/preset-commonmark'
+} from "@milkdown/preset-commonmark";
+import { PepperMilkdownFunc } from "..";
 
 /// @internal
 export const plugins: MilkdownPlugin[] = [
@@ -26,4 +28,19 @@ export const plugins: MilkdownPlugin[] = [
   remarkMarker,
 
   syncListOrderPlugin,
-].flat()
+].flat();
+
+export function buildPlugins(
+  config: PepperMilkdownFunc[]
+): MilkdownPlugin | MilkdownPlugin[] {
+  let ret: MilkdownPlugin[] = [];
+  config.forEach((f) => {
+    switch (f) {
+      case PepperMilkdownFunc.Bold:
+        break;
+      case PepperMilkdownFunc.Italic:
+        break;
+    }
+  });
+  return ret.flat();
+}

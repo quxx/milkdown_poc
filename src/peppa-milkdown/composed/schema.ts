@@ -1,7 +1,14 @@
 /* Copyright 2021, Milkdown by Mirone. */
 
-import type { MilkdownPlugin } from '@milkdown/ctx'
-import { emphasisAttr, emphasisSchema, linkAttr, linkSchema, strongAttr, strongSchema } from '@milkdown/preset-commonmark'
+import type { MilkdownPlugin } from "@milkdown/ctx";
+import {
+  emphasisAttr,
+  emphasisSchema,
+  linkAttr,
+  linkSchema,
+  strongAttr,
+  strongSchema,
+} from "@milkdown/preset-commonmark";
 import {
   bulletListAttr,
   bulletListSchema,
@@ -9,7 +16,8 @@ import {
   hardbreakAttr,
   hardbreakSchema,
   hrAttr,
-  hrSchema, htmlAttr,
+  hrSchema,
+  htmlAttr,
   htmlSchema,
   imageAttr,
   imageSchema,
@@ -20,7 +28,8 @@ import {
   paragraphAttr,
   paragraphSchema,
   textSchema,
-} from '@milkdown/preset-commonmark'
+} from "@milkdown/preset-commonmark";
+import { PepperMilkdownFunc } from "..";
 
 /// @internal
 export const schema: MilkdownPlugin[] = [
@@ -60,4 +69,26 @@ export const schema: MilkdownPlugin[] = [
   htmlSchema,
 
   textSchema,
-].flat()
+].flat();
+
+export function buildShema(
+  config: PepperMilkdownFunc[]
+): MilkdownPlugin | MilkdownPlugin[] {
+  let ret: MilkdownPlugin[] = [
+    docSchema,
+    textSchema,
+    paragraphAttr,
+    paragraphSchema,
+  ].flat();
+  config.forEach((f) => {
+    switch (f) {
+      case PepperMilkdownFunc.Bold:
+        ret.push(strongAttr, ...strongSchema);
+        break;
+      case PepperMilkdownFunc.Italic:
+        ret.push(emphasisAttr, ...emphasisSchema);
+        break;
+    }
+  });
+  return ret.flat();
+}
