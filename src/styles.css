@@ -6,11 +6,25 @@
   font-family: sans-serif;
   text-align: center;
 }
+
 .editor {
-  padding: 0 1rem;
-  border: 1px solid #cccccc;
+  margin: auto;
+  background-color: #fff;
+  border-color: #576164;
   border-radius: 5px;
+  border-style: solid;
+  border-width: 2px;
+  padding: 0px 0.5rem;
   text-align: left;
+  font-family: BundesSans Web, Calibri, Verdana, Arial, Helvetica, sans-serif;
+}
+
+.editor:focus-within {
+  outline-color: #0077b6;
+  outline-offset: 2px;
+  outline-style: solid;
+  outline-width: 3px;
+  transition: outline-offset 0.2s linear 0s;
 }
 
 .w-65 {

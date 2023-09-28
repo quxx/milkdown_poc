@@ -4,8 +4,8 @@ import {
   toggleEmphasisCommand,
   toggleStrongCommand,
 } from "@milkdown/preset-commonmark";
-import { Button } from "./Button";
 import { PepperMilkdownFunc } from "..";
+import { KolButton } from "@public-ui/react";
 
 interface ToolbarProps {
   editor: Editor;
@@ -24,15 +24,21 @@ export function Toolbar({ config, editor }: ToolbarProps) {
   return (
     <div className="prose mx-auto flex">
       {handleCheck(PepperMilkdownFunc.Bold) && (
-        <Button
-          icon="format_bold"
-          onClick={() => call(toggleStrongCommand.key)}
+        <KolButton
+          _icon="codicon codicon-bold"
+          _label="Bold"
+          _variant="normal"
+          _hideLabel
+          onMouseDown={() => call(toggleStrongCommand.key)}
         />
       )}
       {handleCheck(PepperMilkdownFunc.Italic) && (
-        <Button
-          icon="format_italic"
-          onClick={() => call(toggleEmphasisCommand.key)}
+        <KolButton
+          _icon="codicon codicon-italic"
+          _label="Italic"
+          _variant="normal"
+          _hideLabel
+          onMouseDown={() => call(toggleEmphasisCommand.key)}
         />
       )}
     </div>

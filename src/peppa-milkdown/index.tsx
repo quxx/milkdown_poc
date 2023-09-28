@@ -24,6 +24,7 @@ import {
 } from "./composed";
 import { MilkdownPlugin } from "@milkdown/ctx";
 import { Toolbar } from "./component/Toolbar";
+import { KolTextarea } from "@public-ui/react";
 
 interface MilkdownInternalProps {
   defaultValue: string;
@@ -74,11 +75,13 @@ export function MarkdownEditor({
         setEditor={sendDataToParent}
       />
       {markdownView && (
-        <textarea
-          className="prose w-65 editor"
-          value={value}
-          onChange={(e) => setValue(e.target.value)}
-        />
+        <div className="flex justify-center">
+          <KolTextarea
+            className="w-65"
+            _value={value}
+            _on={{ onChange: (e, v) => setValue(v as string) }}
+          />
+        </div>
       )}
     </MilkdownProvider>
   );
@@ -109,7 +112,7 @@ function MilkdownInternal({
           }));
           ctx.update(rootAttrsCtx, (prev) => ({
             ...prev,
-            class: "milkdown-editor prose m-auto",
+            class: "milkdown-editor m-auto",
           }));
 
           const listener = ctx.get(listenerCtx);
