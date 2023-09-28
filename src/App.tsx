@@ -1,8 +1,9 @@
 import "@milkdown/theme-nord/style.css";
 import "./styles.css";
 import { MarkdownEditor, PepperMilkdownFunc } from "./peppa-milkdown";
+import { KolSpin } from "@public-ui/react";
 
-export default function App() {
+export const App = () => {
   return (
     <div className="App">
       <h1>Milkdown Test</h1>
@@ -28,4 +29,4 @@ export default function App() {
       />
     </div>
   );
-}
+};
